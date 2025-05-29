@@ -2,8 +2,9 @@ import { COLORS } from "@/constants/theme";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { styles } from "@/styles/feed.style";
+import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
@@ -30,14 +31,19 @@ type PostProps = {
 };
 
 export default function Post({ post }: PostProps) {
+	const { user } = useUser();
 	const [isLiked, setIsLiked] = useState(post.isLiked);
 	const [isBookmarked, setIsBookmarked] = useState(false);
 	const [likeCount, setLikeCount] = useState(post.likes);
 	const [commentCount, setCommentCount] = useState(post.comments);
 	const [showCommentModel, setShowCommentModel] = useState(false);
 
+	const currentUser = useQuery(api.users.getUserByClerkId, {
+		clerkId: user?.id || "",
+	});
 	const toggleLike = useMutation(api.posts.toggleLike);
 	const toggleBookmark = useMutation(api.bookmarks.toggleBookmark);
+	const deletePost = useMutation(api.posts.deletePost);
 
 	const handleLike = async () => {
 		try {
@@ -55,6 +61,14 @@ export default function Post({ post }: PostProps) {
 			const newIsBookmarked = await toggleBookmark({ postId: post._id });
 
 			setIsBookmarked(newIsBookmarked);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleDeletePost = async () => {
+		try {
+			await deletePost({ postId: post._id });
 		} catch (error) {
 			console.log(error);
 		}
@@ -79,13 +93,23 @@ export default function Post({ post }: PostProps) {
 					</TouchableOpacity>
 				</Link>
 				{/* ACTION */}
-				<TouchableOpacity>
-					<Ionicons
-						name="ellipsis-horizontal"
-						size={20}
-						color={COLORS.white}
-					/>
-				</TouchableOpacity>
+				{post.author._id === currentUser?._id ? (
+					<TouchableOpacity onPress={handleDeletePost}>
+						<Ionicons
+							name="trash-outline"
+							size={20}
+							color={COLORS.primary}
+						/>
+					</TouchableOpacity>
+				) : (
+					<TouchableOpacity>
+						<Ionicons
+							name="ellipsis-horizontal"
+							size={20}
+							color={COLORS.white}
+						/>
+					</TouchableOpacity>
+				)}
 			</View>
 			{/* IMAGE */}
 			<Image
