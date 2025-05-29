@@ -33,7 +33,7 @@ type PostProps = {
 export default function Post({ post }: PostProps) {
 	const { user } = useUser();
 	const [isLiked, setIsLiked] = useState(post.isLiked);
-	const [isBookmarked, setIsBookmarked] = useState(false);
+	const [isBookmarked, setIsBookmarked] = useState(post.isBookmarked);
 	const [likeCount, setLikeCount] = useState(post.likes);
 	const [commentCount, setCommentCount] = useState(post.comments);
 	const [showCommentModel, setShowCommentModel] = useState(false);
