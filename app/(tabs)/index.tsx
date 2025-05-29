@@ -7,20 +7,26 @@ import { styles } from "@/styles/feed.style";
 import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+	FlatList,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
+
+const STORIES = [
+	{
+		id: "1",
+		username: "You",
+		avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
+		hasStory: false,
+	},
+];
 
 export default function Index() {
 	const { signOut } = useAuth();
 	const posts = useQuery(api.posts.listPost);
-
-	const STORIES = [
-		{
-			id: "1",
-			username: "You",
-			avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
-			hasStory: false,
-		},
-	];
 
 	if (posts === undefined) return <Loader />;
 	if (posts.length === 0) return <NoPostsFound />;
@@ -37,28 +43,31 @@ export default function Index() {
 					/>
 				</TouchableOpacity>
 			</View>
-
-			<ScrollView
+			{/* CONTENT */}
+			<FlatList
+				data={posts}
+				renderItem={({ item }) => <Post post={item} />}
+				keyExtractor={(item) => item._id}
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
-			>
-				{/* STORY SECTION */}
-				<ScrollView
-					showsHorizontalScrollIndicator={false}
-					style={styles.storiesContainer}
-				>
-					{STORIES.map((story) => (
-						<Story key={story.id} story={story} />
-					))}
-				</ScrollView>
-				{/* POST SECTION */}
-				{posts.map((post) => (
-					<Post key={post._id} post={post} />
-				))}
-			</ScrollView>
+				ListHeaderComponent={<StorySection />}
+			/>
 		</View>
 	);
 }
+
+const StorySection = () => {
+	return (
+		<ScrollView
+			showsHorizontalScrollIndicator={false}
+			style={styles.storiesContainer}
+		>
+			{STORIES.map((story) => (
+				<Story key={story.id} story={story} />
+			))}
+		</ScrollView>
+	);
+};
 
 const NoPostsFound = () => (
 	<View

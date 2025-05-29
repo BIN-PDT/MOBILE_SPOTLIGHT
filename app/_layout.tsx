@@ -1,8 +1,25 @@
 import InitialLayout from "@/components/InitialLayout";
 import ClerkAndConvexProvider from "@/providers/ClerkAndConvexProvider";
+import { useFonts } from "expo-font";
+import { SplashScreen } from "expo-router";
+import { useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
+	const [fontsLoaded] = useFonts({
+		"JetBrainsMono-Medium": require("../assets/fonts/JetBrainsMono-Medium.ttf"),
+	});
+
+	useEffect(() => {
+		async function setUp() {
+			if (fontsLoaded) await SplashScreen.hideAsync();
+		}
+
+		setUp();
+	}, [fontsLoaded]);
+
 	return (
 		<ClerkAndConvexProvider>
 			<SafeAreaProvider>
