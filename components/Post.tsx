@@ -4,10 +4,12 @@ import { Id } from "@/convex/_generated/dataModel";
 import { styles } from "@/styles/feed.style";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
+import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import CommentModal from "./CommentModal";
 
 type PostProps = {
 	post: {
@@ -31,6 +33,8 @@ export default function Post({ post }: PostProps) {
 	const [isLiked, setIsLiked] = useState(post.isLiked);
 	const [likeCount, setLikeCount] = useState(post.likes);
 	const toggleLike = useMutation(api.posts.toggleLike);
+	const [commentCount, setCommentCount] = useState(post.comments);
+	const [showCommentModel, setShowCommentModel] = useState(false);
 
 	const handleLike = async () => {
 		try {
@@ -88,7 +92,7 @@ export default function Post({ post }: PostProps) {
 							color={isLiked ? COLORS.primary : COLORS.white}
 						/>
 					</TouchableOpacity>
-					<TouchableOpacity>
+					<TouchableOpacity onPress={() => setShowCommentModel(true)}>
 						<Ionicons
 							name="chatbubble-outline"
 							size={24}
@@ -120,12 +124,27 @@ export default function Post({ post }: PostProps) {
 					</View>
 				)}
 
-				<TouchableOpacity>
-					<Text style={styles.commentsText}>View all 2 comments</Text>
-				</TouchableOpacity>
+				{commentCount > 0 && (
+					<TouchableOpacity onPress={() => setShowCommentModel(true)}>
+						<Text style={styles.commentsText}>
+							View all {commentCount} comments
+						</Text>
+					</TouchableOpacity>
+				)}
 
-				<Text style={styles.timeAgo}>2 hours ago</Text>
+				<Text style={styles.timeAgo}>
+					{formatDistanceToNow(post._creationTime, {
+						addSuffix: true,
+					})}
+				</Text>
 			</View>
+
+			<CommentModal
+				postId={post._id}
+				visible={showCommentModel}
+				onClose={() => setShowCommentModel(false)}
+				onSubmit={() => setCommentCount((prev) => prev + 1)}
+			/>
 		</View>
 	);
 }
