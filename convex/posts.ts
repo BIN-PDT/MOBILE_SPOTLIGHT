@@ -1,10 +1,49 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
+import { getAuthenticatedUser } from "./users";
 
 export const generateUploadUrl = mutation(async (ctx) => {
-	const identity = await ctx.auth.getUserIdentity();
-	if (!identity) throw new Error("Unauthorized - Require logged in.");
+	await getAuthenticatedUser(ctx);
 	return await ctx.storage.generateUploadUrl();
+});
+
+export const listPost = query({
+	handler: async (ctx) => {
+		const currentUser = await getAuthenticatedUser(ctx);
+
+		const posts = await ctx.db.query("posts").order("desc").collect();
+
+		if (posts.length === 0) return [];
+		const postsWithInfo = await Promise.all(
+			posts.map(async (post) => {
+				const postAuthor = await ctx.db.get(post.userId);
+				const likeObj = await ctx.db
+					.query("likes")
+					.withIndex("by_user_and_post", (q) =>
+						q.eq("userId", currentUser._id).eq("postId", post._id)
+					)
+					.first();
+				const bookmarkObj = await ctx.db
+					.query("bookmarks")
+					.withIndex("by_user_and_post", (q) =>
+						q.eq("userId", currentUser._id).eq("postId", post._id)
+					)
+					.first();
+
+				return {
+					...post,
+					author: {
+						_id: postAuthor?._id,
+						username: postAuthor?.username,
+						image: postAuthor?.image,
+					},
+					isLiked: Boolean(likeObj),
+					isBookmarked: Boolean(bookmarkObj),
+				};
+			})
+		);
+		return postsWithInfo;
+	},
 });
 
 export const createPost = mutation({
@@ -13,14 +52,7 @@ export const createPost = mutation({
 		caption: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
-		if (!identity) throw new Error("Unauthorized - Require logged in.");
-
-		const currentUser = await ctx.db
-			.query("users")
-			.withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-			.first();
-		if (!currentUser) throw new Error("User not found.");
+		const currentUser = await getAuthenticatedUser(ctx);
 
 		const imageUrl = await ctx.storage.getUrl(args.storageId);
 		if (!imageUrl) throw new Error("Image not found.");
