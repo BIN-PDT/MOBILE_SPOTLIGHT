@@ -12,7 +12,6 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
 	const [fontsLoaded] = useFonts({
-		"JetBrainsMono-Medium": require("../assets/fonts/JetBrainsMono-Medium.ttf"),
 		Lobster: require("../assets/fonts/Lobster-Regular.ttf"),
 		BarlowCondensed: require("../assets/fonts/BarlowCondensed-Regular.ttf"),
 		NewAmsterdam: require("../assets/fonts/NewAmsterdam-Regular.ttf"),

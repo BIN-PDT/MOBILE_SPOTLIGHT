@@ -11,28 +11,29 @@ export default function TabLayout() {
 				tabBarActiveTintColor: COLORS.primary,
 				tabBarInactiveTintColor: COLORS.grey,
 				tabBarStyle: {
-					backgroundColor: "black",
 					position: "absolute",
+					paddingTop: 8,
+					paddingBottom: 8,
+					height: 40,
+					backgroundColor: "black",
 					borderTopWidth: 0,
 					elevation: 0,
-					height: 40,
-					paddingBottom: 8,
 				},
 			}}
 		>
 			<Tabs.Screen
 				name="index"
 				options={{
-					tabBarIcon: ({ size, color }) => (
-						<Ionicons name="home" size={size} color={color} />
+					tabBarIcon: ({ color }) => (
+						<Ionicons name="paper-plane" size={24} color={color} />
 					),
 				}}
 			/>
 			<Tabs.Screen
 				name="bookmarks"
 				options={{
-					tabBarIcon: ({ size, color }) => (
-						<Ionicons name="bookmark" size={size} color={color} />
+					tabBarIcon: ({ color }) => (
+						<Ionicons name="bookmark" size={24} color={color} />
 					),
 				}}
 			/>
@@ -42,7 +43,7 @@ export default function TabLayout() {
 					tabBarIcon: ({ size }) => (
 						<Ionicons
 							name="add-circle"
-							size={size}
+							size={24}
 							color={COLORS.primary}
 						/>
 					),
@@ -51,18 +52,22 @@ export default function TabLayout() {
 			<Tabs.Screen
 				name="notifications"
 				options={{
-					tabBarIcon: ({ size, color }) => (
-						<Ionicons name="heart" size={size} color={color} />
+					tabBarIcon: ({ color }) => (
+						<Ionicons
+							name="notifications"
+							size={24}
+							color={color}
+						/>
 					),
 				}}
 			/>
 			<Tabs.Screen
 				name="profile"
 				options={{
-					tabBarIcon: ({ size, color }) => (
+					tabBarIcon: ({ color }) => (
 						<Ionicons
 							name="person-circle"
-							size={size}
+							size={24}
 							color={color}
 						/>
 					),

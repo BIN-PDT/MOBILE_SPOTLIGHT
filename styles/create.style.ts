@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
 		fontFamily: "Lobster",
 		fontSize: 18,
 		fontWeight: "600",
-		color: COLORS.white,
+		color: COLORS.primary,
 		letterSpacing: 1,
 		textAlign: "center",
 	},
