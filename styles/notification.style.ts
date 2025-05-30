@@ -13,9 +13,10 @@ export const styles = StyleSheet.create({
 		borderBottomColor: COLORS.surface,
 	},
 	headerTitle: {
+		fontFamily: "Lobster",
 		fontSize: 24,
-		fontFamily: "JetBrainsMono-Medium",
 		color: COLORS.primary,
+		letterSpacing: 1,
 	},
 	listContainer: {
 		padding: 16,
@@ -60,27 +61,26 @@ export const styles = StyleSheet.create({
 		flex: 1,
 	},
 	username: {
-		color: COLORS.white,
-		fontSize: 14,
-		fontWeight: "600",
 		marginBottom: 2,
+		fontFamily: "BarlowCondensed",
+		fontSize: 14,
+		color: COLORS.white,
 	},
 	action: {
-		color: COLORS.grey,
-		fontSize: 14,
 		marginBottom: 2,
+		fontFamily: "NewAmsterdam",
+		fontSize: 11,
+		color: COLORS.grey,
+		letterSpacing: 0.75,
 	},
 	timeAgo: {
-		color: COLORS.grey,
+		fontFamily: "BarlowCondensed",
 		fontSize: 12,
+		color: COLORS.grey,
 	},
 	postImage: {
 		width: 44,
 		height: 44,
 		borderRadius: 6,
-	},
-	centered: {
-		justifyContent: "center",
-		alignItems: "center",
 	},
 });

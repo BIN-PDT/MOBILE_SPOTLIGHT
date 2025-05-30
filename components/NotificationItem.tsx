@@ -7,8 +7,8 @@ import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
-type NotificationProps = {
-	notification: {
+type NotificationItemProps = {
+	item: {
 		_id: Id<"notifications">;
 		_creationTime: number;
 		postId?: Id<"posts"> | undefined;
@@ -37,27 +37,27 @@ type NotificationProps = {
 	};
 };
 
-export default function Notification({ notification }: NotificationProps) {
+export default function NotificationItem({ item }: NotificationItemProps) {
 	return (
 		<View style={styles.notificationItem}>
 			<View style={styles.notificationContent}>
 				{/* SENDER AVATAR */}
-				<Link href={`/user/${notification.senderId}`} asChild>
+				<Link href={`/user/${item.senderId}`} asChild>
 					<TouchableOpacity style={styles.avatarContainer}>
 						<Image
-							source={notification.sender.image}
+							source={item.sender.image}
 							style={styles.avatar}
 							contentFit="cover"
 							transition={200}
 						/>
 						<View style={styles.iconBadge}>
-							{notification.type === "like" ? (
+							{item.type === "like" ? (
 								<Ionicons
 									name="heart"
 									size={14}
 									color={COLORS.primary}
 								/>
-							) : notification.type === "follow" ? (
+							) : item.type === "follow" ? (
 								<Ionicons
 									name="person-add"
 									size={14}
@@ -75,33 +75,33 @@ export default function Notification({ notification }: NotificationProps) {
 				</Link>
 				{/* NOTIFICATION INFO */}
 				<View style={styles.notificationInfo}>
-					<Link href={`/user/${notification.senderId}`} asChild>
+					<Link href={`/user/${item.senderId}`} asChild>
 						<TouchableOpacity>
 							<Text style={styles.username}>
-								{notification.sender.username}
+								{item.sender.username}
 							</Text>
 						</TouchableOpacity>
 					</Link>
 
 					<Text style={styles.action}>
-						{notification.type == "follow"
-							? "started following you"
-							: notification.type === "like"
-								? "liked your post"
-								: `commented: "${notification.comment.content}"`}
+						{item.type == "follow"
+							? "Started following you!"
+							: item.type === "like"
+								? "Liked your post!"
+								: "Commented your post!"}
 					</Text>
 
 					<Text style={styles.timeAgo}>
-						{formatDistanceToNow(notification._creationTime, {
+						{formatDistanceToNow(item._creationTime, {
 							addSuffix: true,
 						})}
 					</Text>
 				</View>
 			</View>
 			{/* POST IMAGE */}
-			{notification.post && (
+			{item.post && (
 				<Image
-					source={notification.post.imageUrl}
+					source={item.post.imageUrl}
 					style={styles.postImage}
 					contentFit="cover"
 					transition={200}
