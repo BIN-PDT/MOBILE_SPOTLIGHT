@@ -11,7 +11,6 @@ import { useState } from "react";
 import {
 	FlatList,
 	RefreshControl,
-	ScrollView,
 	Text,
 	TouchableOpacity,
 	View,
@@ -28,12 +27,12 @@ export default function Index() {
 	};
 
 	if (posts === undefined) return <Loader />;
-	if (posts.length === 0) return <NoPostsFound />;
+	if (posts.length === 0) return <NoPostFound />;
 	return (
 		<View style={styles.container}>
 			{/* HEADER */}
 			<View style={styles.header}>
-				<Text style={styles.headerTitle}>spotlight</Text>
+				<Text style={styles.headerTitle}>Spotlight</Text>
 				<TouchableOpacity onPress={() => signOut()}>
 					<Ionicons
 						name="log-out-outline"
@@ -49,7 +48,7 @@ export default function Index() {
 				keyExtractor={(item) => item._id}
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
-				ListHeaderComponent={<StorySection />}
+				ListHeaderComponent={<Story />}
 				refreshControl={
 					<RefreshControl
 						refreshing={isRefreshing}
@@ -62,34 +61,28 @@ export default function Index() {
 	);
 }
 
-const StorySection = () => {
-	const stories = useQuery(api.users.listUser);
-
-	if (stories === undefined) return <Loader />;
+const NoPostFound = () => {
 	return (
-		stories.length > 0 && (
-			<ScrollView
-				horizontal={true}
-				showsHorizontalScrollIndicator={false}
-				style={styles.storiesContainer}
+		<View
+			style={{
+				backgroundColor: COLORS.background,
+				height: "100%",
+				justifyContent: "center",
+				alignItems: "center",
+				gap: 8,
+			}}
+		>
+			<Ionicons name="image-outline" size={32} color={COLORS.grey} />
+			<Text
+				style={{
+					fontFamily: "BarlowCondensed",
+					fontSize: 14,
+					fontStyle: "italic",
+					color: COLORS.grey,
+				}}
 			>
-				{stories.map((story) => (
-					<Story key={story._id} story={story} />
-				))}
-			</ScrollView>
-		)
+				No posts yet
+			</Text>
+		</View>
 	);
 };
-
-const NoPostsFound = () => (
-	<View
-		style={{
-			flex: 1,
-			justifyContent: "center",
-			alignItems: "center",
-			backgroundColor: COLORS.background,
-		}}
-	>
-		<Text style={{ fontSize: 20, color: COLORS.primary }}>No post yet</Text>
-	</View>
-);
