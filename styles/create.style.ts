@@ -1,7 +1,7 @@
 import { COLORS } from "@/constants/theme";
 import { Dimensions, StyleSheet } from "react-native";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
 	container: {
@@ -21,27 +21,29 @@ export const styles = StyleSheet.create({
 		borderBottomColor: COLORS.surface,
 	},
 	headerTitle: {
+		flex: 1,
+		fontFamily: "Lobster",
 		fontSize: 18,
 		fontWeight: "600",
 		color: COLORS.white,
+		letterSpacing: 1,
+		textAlign: "center",
 	},
 	contentDisabled: {
 		opacity: 0.7,
 	},
 	shareButton: {
-		paddingHorizontal: 12,
-		paddingVertical: 6,
-		minWidth: 60,
-		alignItems: "center",
 		justifyContent: "center",
+		alignItems: "center",
 	},
 	shareButtonDisabled: {
 		opacity: 0.5,
 	},
 	shareText: {
+		fontFamily: "NewAmsterdam",
+		fontSize: 18,
 		color: COLORS.primary,
-		fontSize: 16,
-		fontWeight: "600",
+		letterSpacing: 0.75,
 	},
 	shareTextDisabled: {
 		color: COLORS.grey,
@@ -53,8 +55,10 @@ export const styles = StyleSheet.create({
 		gap: 12,
 	},
 	emptyImageText: {
+		fontFamily: "BarlowCondensed",
+		fontSize: 14,
+		fontStyle: "italic",
 		color: COLORS.grey,
-		fontSize: 16,
 	},
 	content: {
 		flex: 1,
@@ -74,20 +78,21 @@ export const styles = StyleSheet.create({
 		height: "100%",
 	},
 	changeImageButton: {
-		position: "absolute",
-		bottom: 16,
-		right: 16,
 		backgroundColor: "rgba(0, 0, 0, 0.75)",
+		position: "absolute",
+		padding: 8,
+		right: 16,
+		bottom: 16,
 		flexDirection: "row",
 		alignItems: "center",
-		padding: 8,
-		borderRadius: 8,
 		gap: 6,
+		borderRadius: 8,
 	},
 	changeImageText: {
-		color: COLORS.white,
+		fontFamily: "NewAmsterdam",
 		fontSize: 14,
-		fontWeight: "500",
+		color: COLORS.white,
+		letterSpacing: 0.75,
 	},
 	inputSection: {
 		padding: 16,
@@ -104,10 +109,11 @@ export const styles = StyleSheet.create({
 		marginRight: 12,
 	},
 	captionInput: {
-		flex: 1,
-		color: COLORS.white,
-		fontSize: 16,
 		paddingTop: 8,
 		minHeight: 40,
+		flex: 1,
+		fontFamily: "BarlowCondensed",
+		fontSize: 16,
+		color: COLORS.white,
 	},
 });

@@ -28,7 +28,10 @@ export default function Create() {
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [isSharing, setIsSharing] = useState(false);
 
-	const pickImage = async () => {
+	const generateUploadUrl = useMutation(api.posts.generateUploadUrl);
+	const createPost = useMutation(api.posts.createPost);
+
+	const handlePickImage = async () => {
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: "images",
 			allowsEditing: true,
@@ -39,10 +42,7 @@ export default function Create() {
 		if (!result.canceled) setSelectedImage(result.assets[0].uri);
 	};
 
-	const generateUploadUrl = useMutation(api.posts.generateUploadUrl);
-	const createPost = useMutation(api.posts.createPost);
-
-	const handleShare = async () => {
+	const handleSharePost = async () => {
 		if (!selectedImage) return;
 
 		try {
@@ -87,12 +87,11 @@ export default function Create() {
 						/>
 					</TouchableOpacity>
 					<Text style={styles.headerTitle}>New Post</Text>
-					<View style={{ width: 28 }} />
 				</View>
 
 				<TouchableOpacity
 					style={styles.emptyImageContainer}
-					onPress={pickImage}
+					onPress={handlePickImage}
 				>
 					<Ionicons
 						name="image-outline"
@@ -134,7 +133,7 @@ export default function Create() {
 							isSharing && styles.shareButtonDisabled,
 						]}
 						disabled={isSharing || !selectedImage}
-						onPress={handleShare}
+						onPress={handleSharePost}
 					>
 						{isSharing ? (
 							<ActivityIndicator
@@ -146,7 +145,7 @@ export default function Create() {
 						)}
 					</TouchableOpacity>
 				</View>
-
+				{/* CONTENT */}
 				<ScrollView
 					contentContainerStyle={styles.scrollContent}
 					bounces={false}
@@ -168,7 +167,7 @@ export default function Create() {
 							/>
 							<TouchableOpacity
 								style={styles.changeImageButton}
-								onPress={pickImage}
+								onPress={handlePickImage}
 								disabled={isSharing}
 							>
 								<Ionicons
