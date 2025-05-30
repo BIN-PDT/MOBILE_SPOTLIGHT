@@ -15,6 +15,23 @@ export async function getAuthenticatedUser(ctx: QueryCtx | MutationCtx) {
 	return currentUser;
 }
 
+export const listUser = query({
+	handler: async (ctx) => {
+		const currentUser = await getAuthenticatedUser(ctx);
+
+		const users = await ctx.db
+			.query("users")
+			.filter((q) => q.neq(q.field("_id"), currentUser._id))
+			.collect();
+
+		if (users.length === 0) return [];
+		const usersWithInfo = await Promise.all(
+			users.map((user) => ({ ...user, hasStory: user.posts > 0 }))
+		);
+		return usersWithInfo;
+	},
+});
+
 export const createUser = mutation({
 	args: {
 		username: v.string(),

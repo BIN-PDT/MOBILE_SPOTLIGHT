@@ -17,15 +17,6 @@ import {
 	View,
 } from "react-native";
 
-const STORIES = [
-	{
-		id: "1",
-		username: "You",
-		avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
-		hasStory: false,
-	},
-];
-
 export default function Index() {
 	const { signOut } = useAuth();
 	const [isRefreshing, setIsRefreshing] = useState(false);
@@ -72,15 +63,21 @@ export default function Index() {
 }
 
 const StorySection = () => {
+	const stories = useQuery(api.users.listUser);
+
+	if (stories === undefined) return <Loader />;
 	return (
-		<ScrollView
-			showsHorizontalScrollIndicator={false}
-			style={styles.storiesContainer}
-		>
-			{STORIES.map((story) => (
-				<Story key={story.id} story={story} />
-			))}
-		</ScrollView>
+		stories.length > 0 && (
+			<ScrollView
+				horizontal={true}
+				showsHorizontalScrollIndicator={false}
+				style={styles.storiesContainer}
+			>
+				{stories.map((story) => (
+					<Story key={story._id} story={story} />
+				))}
+			</ScrollView>
+		)
 	);
 };
 
