@@ -42,7 +42,7 @@ export default function Notification({ notification }: NotificationProps) {
 		<View style={styles.notificationItem}>
 			<View style={styles.notificationContent}>
 				{/* SENDER AVATAR */}
-				<Link href={`/notifications`} asChild>
+				<Link href={`/user/${notification.senderId}`} asChild>
 					<TouchableOpacity style={styles.avatarContainer}>
 						<Image
 							source={notification.sender.image}
@@ -75,7 +75,7 @@ export default function Notification({ notification }: NotificationProps) {
 				</Link>
 				{/* NOTIFICATION INFO */}
 				<View style={styles.notificationInfo}>
-					<Link href={`/notifications`} asChild>
+					<Link href={`/user/${notification.senderId}`} asChild>
 						<TouchableOpacity>
 							<Text style={styles.username}>
 								{notification.sender.username}
