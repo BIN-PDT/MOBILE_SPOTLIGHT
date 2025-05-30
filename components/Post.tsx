@@ -34,8 +34,6 @@ export default function Post({ post }: PostProps) {
 	const { user } = useUser();
 	const [isLiked, setIsLiked] = useState(post.isLiked);
 	const [isBookmarked, setIsBookmarked] = useState(post.isBookmarked);
-	const [likeCount, setLikeCount] = useState(post.likes);
-	const [commentCount, setCommentCount] = useState(post.comments);
 	const [showCommentModel, setShowCommentModel] = useState(false);
 
 	const currentUser = useQuery(
@@ -51,7 +49,6 @@ export default function Post({ post }: PostProps) {
 			const newIsLiked = await toggleLike({ postId: post._id });
 
 			setIsLiked(newIsLiked);
-			setLikeCount((prev) => (newIsLiked ? prev + 1 : prev - 1));
 		} catch (error) {
 			console.log(error);
 		}
@@ -156,8 +153,8 @@ export default function Post({ post }: PostProps) {
 			{/* INFO */}
 			<View style={styles.postInfo}>
 				<Text style={styles.likesText}>
-					{likeCount > 0
-						? `${likeCount} likes`
+					{post.likes > 0
+						? `${post.likes} likes`
 						: "Be the first to like"}
 				</Text>
 				{post.caption && (
@@ -169,10 +166,10 @@ export default function Post({ post }: PostProps) {
 					</View>
 				)}
 
-				{commentCount > 0 && (
+				{post.comments > 0 && (
 					<TouchableOpacity onPress={() => setShowCommentModel(true)}>
 						<Text style={styles.commentsText}>
-							View all {commentCount} comments
+							View all {post.comments} comments
 						</Text>
 					</TouchableOpacity>
 				)}
@@ -188,7 +185,6 @@ export default function Post({ post }: PostProps) {
 				postId={post._id}
 				visible={showCommentModel}
 				onClose={() => setShowCommentModel(false)}
-				onSubmit={() => setCommentCount((prev) => prev + 1)}
 			/>
 		</View>
 	);

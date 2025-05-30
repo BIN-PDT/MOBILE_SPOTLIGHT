@@ -22,14 +22,12 @@ type CommentModalProps = {
 	postId: Id<"posts">;
 	visible: boolean;
 	onClose: () => void;
-	onSubmit: () => void;
 };
 
 export default function CommentModal({
 	postId,
 	visible,
 	onClose,
-	onSubmit,
 }: CommentModalProps) {
 	const [newComment, setNewComment] = useState("");
 	const comments = useQuery(api.comments.getComments, { postId });
@@ -45,7 +43,6 @@ export default function CommentModal({
 			});
 
 			setNewComment("");
-			onSubmit();
 		} catch (error) {
 			console.log(error);
 		}
