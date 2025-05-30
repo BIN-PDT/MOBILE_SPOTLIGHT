@@ -12,8 +12,8 @@ import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import CommentModal from "./CommentModal";
 
-type PostProps = {
-	post: {
+type PostItemProps = {
+	item: {
 		_id: Id<"posts">;
 		imageUrl: string;
 		caption?: string;
@@ -30,10 +30,10 @@ type PostProps = {
 	};
 };
 
-export default function Post({ post }: PostProps) {
+export default function PostItem({ item }: PostItemProps) {
 	const { user } = useUser();
-	const [isLiked, setIsLiked] = useState(post.isLiked);
-	const [isBookmarked, setIsBookmarked] = useState(post.isBookmarked);
+	const [isLiked, setIsLiked] = useState(item.isLiked);
+	const [isBookmarked, setIsBookmarked] = useState(item.isBookmarked);
 	const [showCommentModel, setShowCommentModel] = useState(false);
 
 	const currentUser = useQuery(
@@ -46,7 +46,7 @@ export default function Post({ post }: PostProps) {
 
 	const handleLike = async () => {
 		try {
-			const newIsLiked = await toggleLike({ postId: post._id });
+			const newIsLiked = await toggleLike({ postId: item._id });
 
 			setIsLiked(newIsLiked);
 		} catch (error) {
@@ -56,7 +56,7 @@ export default function Post({ post }: PostProps) {
 
 	const handleBookmark = async () => {
 		try {
-			const newIsBookmarked = await toggleBookmark({ postId: post._id });
+			const newIsBookmarked = await toggleBookmark({ postId: item._id });
 
 			setIsBookmarked(newIsBookmarked);
 		} catch (error) {
@@ -66,7 +66,7 @@ export default function Post({ post }: PostProps) {
 
 	const handleDeletePost = async () => {
 		try {
-			await deletePost({ postId: post._id });
+			await deletePost({ postId: item._id });
 		} catch (error) {
 			console.log(error);
 		}
@@ -76,29 +76,30 @@ export default function Post({ post }: PostProps) {
 		<View style={styles.post}>
 			{/* HEADER */}
 			<View style={styles.postHeader}>
+				{/* AUTHOR */}
 				<Link
 					href={
-						post.author._id === currentUser?._id
+						item.author._id === currentUser?._id
 							? "/(tabs)/profile"
-							: `/user/${post.author._id}`
+							: `/user/${item.author._id}`
 					}
 					asChild
 				>
 					<TouchableOpacity style={styles.postHeaderLeft}>
 						<Image
-							source={post.author.image}
+							source={item.author.image}
 							style={styles.postAvatar}
 							contentFit="cover"
 							transition={200}
 							cachePolicy="memory-disk"
 						/>
 						<Text style={styles.postUsername}>
-							{post.author.username}
+							{item.author.username}
 						</Text>
 					</TouchableOpacity>
 				</Link>
 				{/* ACTION */}
-				{post.author._id === currentUser?._id ? (
+				{item.author._id === currentUser?._id && (
 					<TouchableOpacity onPress={handleDeletePost}>
 						<Ionicons
 							name="trash-outline"
@@ -106,24 +107,26 @@ export default function Post({ post }: PostProps) {
 							color={COLORS.primary}
 						/>
 					</TouchableOpacity>
-				) : (
-					<TouchableOpacity>
-						<Ionicons
-							name="ellipsis-horizontal"
-							size={20}
-							color={COLORS.white}
-						/>
-					</TouchableOpacity>
 				)}
 			</View>
-			{/* IMAGE */}
-			<Image
-				source={post.imageUrl}
-				style={styles.postImage}
-				contentFit="cover"
-				transition={200}
-				cachePolicy="memory-disk"
-			/>
+			{/* IMAGE & CAPTION */}
+			<View>
+				<Image
+					source={item.imageUrl}
+					style={styles.postImage}
+					contentFit="cover"
+					transition={200}
+					cachePolicy="memory-disk"
+				/>
+
+				{item.caption && (
+					<View style={styles.captionContainer}>
+						<Text style={styles.captionText} numberOfLines={3}>
+							{item.caption}
+						</Text>
+					</View>
+				)}
+			</View>
 			{/* ACTION */}
 			<View style={styles.postActions}>
 				<View style={styles.postActionsLeft}>
@@ -152,37 +155,22 @@ export default function Post({ post }: PostProps) {
 			</View>
 			{/* INFO */}
 			<View style={styles.postInfo}>
-				<Text style={styles.likesText}>
-					{post.likes > 0
-						? `${post.likes} likes`
-						: "Be the first to like"}
-				</Text>
-				{post.caption && (
-					<View style={styles.captionContainer}>
-						<Text style={styles.captionUsername}>
-							{post.author.username}
-						</Text>
-						<Text style={styles.captionText}>{post.caption}</Text>
-					</View>
-				)}
-
-				{post.comments > 0 && (
-					<TouchableOpacity onPress={() => setShowCommentModel(true)}>
-						<Text style={styles.commentsText}>
-							View all {post.comments} comments
-						</Text>
-					</TouchableOpacity>
-				)}
+				<View style={styles.postStats}>
+					<Text style={styles.statText}>{item.likes} likes</Text>
+					<Text style={styles.statText}>
+						{item.comments} comments
+					</Text>
+				</View>
 
 				<Text style={styles.timeAgo}>
-					{formatDistanceToNow(post._creationTime, {
+					{formatDistanceToNow(item._creationTime, {
 						addSuffix: true,
 					})}
 				</Text>
 			</View>
 
 			<CommentModal
-				postId={post._id}
+				postId={item._id}
 				visible={showCommentModel}
 				onClose={() => setShowCommentModel(false)}
 			/>

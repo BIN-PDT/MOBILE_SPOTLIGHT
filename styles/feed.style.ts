@@ -79,8 +79,8 @@ export const styles = StyleSheet.create({
 		marginRight: 8,
 	},
 	postUsername: {
+		fontFamily: "BarlowCondensed",
 		fontSize: 14,
-		fontWeight: "600",
 		color: COLORS.white,
 	},
 	postImage: {
@@ -88,11 +88,10 @@ export const styles = StyleSheet.create({
 		height: width,
 	},
 	postActions: {
+		padding: 12,
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		paddingHorizontal: 12,
-		paddingVertical: 12,
 	},
 	postActionsLeft: {
 		flexDirection: "row",
@@ -102,37 +101,35 @@ export const styles = StyleSheet.create({
 	postInfo: {
 		paddingHorizontal: 12,
 	},
-	likesText: {
-		fontSize: 14,
+	postStats: {
+		flexDirection: "row",
+		gap: 12,
+	},
+	statText: {
+		marginBottom: 4,
+		fontFamily: "BarlowCondensed",
+		fontSize: 12,
 		fontWeight: "600",
 		color: COLORS.white,
-		marginBottom: 6,
 	},
 	captionContainer: {
+		marginTop: 12,
 		flexDirection: "row",
 		flexWrap: "wrap",
-		marginBottom: 6,
-	},
-	captionUsername: {
-		fontSize: 14,
-		fontWeight: "600",
-		color: COLORS.white,
-		marginRight: 6,
 	},
 	captionText: {
-		fontSize: 14,
-		color: COLORS.white,
+		marginHorizontal: "auto",
+		maxWidth: 300,
 		flex: 1,
-	},
-	commentsText: {
-		fontSize: 14,
-		color: COLORS.grey,
-		marginBottom: 4,
+		fontFamily: "Lobster",
+		fontSize: 20,
+		color: COLORS.white,
+		textAlign: "center",
 	},
 	timeAgo: {
+		fontFamily: "BarlowCondensed",
 		fontSize: 12,
 		color: COLORS.grey,
-		marginBottom: 8,
 	},
 	modalContainer: {
 		backgroundColor: COLORS.background,

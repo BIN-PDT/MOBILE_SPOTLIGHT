@@ -1,5 +1,5 @@
 import Loader from "@/components/Loader";
-import Post from "@/components/Post";
+import PostItem from "@/components/PostItem";
 import Story from "@/components/Story";
 import { COLORS } from "@/constants/theme";
 import { api } from "@/convex/_generated/api";
@@ -44,7 +44,7 @@ export default function Index() {
 			{/* CONTENT */}
 			<FlatList
 				data={posts}
-				renderItem={({ item }) => <Post post={item} />}
+				renderItem={({ item }) => <PostItem item={item} />}
 				keyExtractor={(item) => item._id}
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
