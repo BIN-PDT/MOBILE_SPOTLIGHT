@@ -108,6 +108,14 @@ export const deletePost = mutation({
 		for (const bookmarkObj of bookmarkObjs) {
 			await ctx.db.delete(bookmarkObj._id);
 		}
+		// DELETE ASSOCIATED NOTIFICATIONS.
+		const notificationObjs = await ctx.db
+			.query("notifications")
+			.withIndex("by_post", (q) => q.eq("postId", args.postId))
+			.collect();
+		for (const notificationObj of notificationObjs) {
+			await ctx.db.delete(notificationObj._id);
+		}
 		// DELETE MEDIA FILE.
 		await ctx.storage.delete(existingPost.storageId);
 		// DELETE POST.
