@@ -1,8 +1,10 @@
 import InitialLayout from "@/components/InitialLayout";
 import ClerkAndConvexProvider from "@/providers/ClerkAndConvexProvider";
 import { useFonts } from "expo-font";
+import * as NavigationBar from "expo-navigation-bar";
 import { SplashScreen } from "expo-router";
 import { useEffect } from "react";
+import { Platform } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
@@ -11,6 +13,13 @@ export default function RootLayout() {
 	const [fontsLoaded] = useFonts({
 		"JetBrainsMono-Medium": require("../assets/fonts/JetBrainsMono-Medium.ttf"),
 	});
+	// UPDATE NATIVE NAVIGATION BAR ON ANDROID.
+	useEffect(() => {
+		if (Platform.OS === "android") {
+			NavigationBar.setBackgroundColorAsync("black");
+			NavigationBar.setButtonStyleAsync("light");
+		}
+	}, []);
 
 	useEffect(() => {
 		async function setUp() {
