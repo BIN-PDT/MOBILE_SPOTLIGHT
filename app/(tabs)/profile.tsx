@@ -7,7 +7,7 @@ import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "convex/react";
 import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	FlatList,
 	Keyboard,
@@ -39,6 +39,13 @@ export default function Profile() {
 	const [selectedPost, setSelectedPost] = useState<Doc<"posts"> | null>(null);
 	const posts = useQuery(api.posts.getPostsByUser, {});
 
+	useEffect(() => {
+		setEditedProfile({
+			fullname: currentUser?.fullname || "",
+			bio: currentUser?.bio || "",
+		});
+	}, [currentUser]);
+
 	const handleSaveProfile = async () => {
 		await updateProfile(editedProfile);
 		setShowProfileModal(false);
@@ -50,7 +57,7 @@ export default function Profile() {
 			{/* HEADER */}
 			<View style={styles.header}>
 				<View style={styles.headerLeft}>
-					<Text style={styles.username}>{currentUser.username}</Text>
+					<Text style={styles.headerTitle}>Profile</Text>
 				</View>
 				<View style={styles.headerRight}>
 					<TouchableOpacity
@@ -65,7 +72,7 @@ export default function Profile() {
 					</TouchableOpacity>
 				</View>
 			</View>
-
+			{/* CONTENT */}
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View style={styles.profileInfo}>
 					{/* AVATAR & STATS */}
@@ -77,6 +84,9 @@ export default function Profile() {
 								contentFit="cover"
 								transition={200}
 							/>
+							<Text style={styles.name}>
+								{currentUser.fullname}
+							</Text>
 						</View>
 
 						<View style={styles.statsContainer}>
@@ -100,11 +110,6 @@ export default function Profile() {
 							</View>
 						</View>
 					</View>
-					{/* INFO */}
-					<Text style={styles.name}>{currentUser.fullname}</Text>
-					{currentUser.bio && (
-						<Text style={styles.bio}>{currentUser.bio}</Text>
-					)}
 					{/* ACTION */}
 					<View style={styles.actionButtons}>
 						<TouchableOpacity
@@ -115,35 +120,32 @@ export default function Profile() {
 								Edit Profile
 							</Text>
 						</TouchableOpacity>
-						<TouchableOpacity style={styles.shareButton}>
-							<Ionicons
-								name="share-outline"
-								size={20}
-								color={COLORS.white}
-							/>
-						</TouchableOpacity>
 					</View>
 				</View>
 				{/* POST */}
-				{posts.length === 0 && <NoPostFound />}
-				<FlatList
-					data={posts}
-					numColumns={3}
-					scrollEnabled={false}
-					renderItem={({ item }) => (
-						<TouchableOpacity
-							style={styles.gridItem}
-							onPress={() => setSelectedPost(item)}
-						>
-							<Image
-								source={item.imageUrl}
-								style={styles.gridImage}
-								contentFit="cover"
-								transition={200}
-							/>
-						</TouchableOpacity>
-					)}
-				/>
+				{posts.length === 0 ? (
+					<NoPostFound />
+				) : (
+					<FlatList
+						data={posts}
+						renderItem={({ item }) => (
+							<TouchableOpacity
+								style={styles.gridItem}
+								onPress={() => setSelectedPost(item)}
+							>
+								<Image
+									source={item.imageUrl}
+									style={styles.gridImage}
+									contentFit="cover"
+									transition={200}
+								/>
+							</TouchableOpacity>
+						)}
+						keyExtractor={(item) => item._id}
+						numColumns={3}
+						scrollEnabled={false}
+					/>
+				)}
 			</ScrollView>
 			{/* EDIT PROFILE MODAL */}
 			<Modal
@@ -226,23 +228,15 @@ export default function Profile() {
 				<View style={styles.modalBackdrop}>
 					{selectedPost && (
 						<View style={styles.postDetailContainer}>
-							<View style={styles.postDetailHeader}>
-								<TouchableOpacity
-									onPress={() => setSelectedPost(null)}
-								>
-									<Ionicons
-										name="close"
-										size={24}
-										color={COLORS.white}
-									/>
-								</TouchableOpacity>
-							</View>
-
-							<Image
-								source={selectedPost.imageUrl}
-								style={styles.postDetailImage}
-								cachePolicy="memory-disk"
-							/>
+							<TouchableOpacity
+								onPress={() => setSelectedPost(null)}
+							>
+								<Image
+									source={selectedPost.imageUrl}
+									style={styles.postDetailImage}
+									cachePolicy="memory-disk"
+								/>
+							</TouchableOpacity>
 						</View>
 					)}
 				</View>
@@ -255,14 +249,22 @@ const NoPostFound = () => {
 	return (
 		<View
 			style={{
-				height: "100%",
 				backgroundColor: COLORS.background,
+				height: "100%",
 				justifyContent: "center",
 				alignItems: "center",
+				gap: 8,
 			}}
 		>
-			<Ionicons name="images-outline" size={48} color={COLORS.primary} />
-			<Text style={{ fontSize: 20, color: COLORS.white }}>
+			<Ionicons name="image-outline" size={32} color={COLORS.grey} />
+			<Text
+				style={{
+					fontFamily: "BarlowCondensed",
+					fontSize: 14,
+					fontStyle: "italic",
+					color: COLORS.grey,
+				}}
+			>
 				No posts yet
 			</Text>
 		</View>
