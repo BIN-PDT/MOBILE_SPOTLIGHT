@@ -15,7 +15,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import Comment from "./Comment";
+import CommentItem from "./CommentItem";
 import Loader from "./Loader";
 
 type CommentModalProps = {
@@ -53,7 +53,7 @@ export default function CommentModal({
 			visible={visible}
 			animationType="slide"
 			transparent={true}
-			onRequestClose={onClose}
+			onRequestClose={() => onClose()}
 		>
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -62,10 +62,9 @@ export default function CommentModal({
 				{/* HEADER */}
 				<View style={styles.modalHeader}>
 					<TouchableOpacity onPress={onClose}>
-						<Ionicons name="close" size={28} color={COLORS.white} />
+						<Ionicons name="close" size={24} color={COLORS.white} />
 					</TouchableOpacity>
 					<Text style={styles.modalTitle}>Comments</Text>
-					<View style={{ width: 24 }} />
 				</View>
 				{/* CONTENT */}
 				{comments === undefined ? (
@@ -73,7 +72,7 @@ export default function CommentModal({
 				) : (
 					<FlatList
 						data={comments}
-						renderItem={({ item }) => <Comment comment={item} />}
+						renderItem={({ item }) => <CommentItem item={item} />}
 						keyExtractor={(item) => item._id}
 						contentContainerStyle={styles.commentsList}
 					/>

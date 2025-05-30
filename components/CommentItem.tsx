@@ -3,8 +3,8 @@ import { styles } from "@/styles/feed.style";
 import { formatDistanceToNow } from "date-fns";
 import { Image, Text, View } from "react-native";
 
-type CommentProps = {
-	comment: {
+type CommentItemProps = {
+	item: {
 		_id: Id<"comments">;
 		_creationTime: number;
 		postId: Id<"posts">;
@@ -17,20 +17,18 @@ type CommentProps = {
 	};
 };
 
-export default function Comment({ comment }: CommentProps) {
+export default function CommentItem({ item }: CommentItemProps) {
 	return (
 		<View style={styles.commentContainer}>
 			<Image
-				source={{ uri: comment.user.image }}
+				source={{ uri: item.user.image }}
 				style={styles.commentAvatar}
 			/>
 			<View style={styles.commentContent}>
-				<Text style={styles.commentUsername}>
-					{comment.user.fullname}
-				</Text>
-				<Text style={styles.commentText}>{comment.content}</Text>
+				<Text style={styles.commentUsername}>{item.user.fullname}</Text>
+				<Text style={styles.commentText}>{item.content}</Text>
 				<Text style={styles.commentTime}>
-					{formatDistanceToNow(comment._creationTime, {
+					{formatDistanceToNow(item._creationTime, {
 						addSuffix: true,
 					})}
 				</Text>
