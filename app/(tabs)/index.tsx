@@ -7,8 +7,10 @@ import { styles } from "@/styles/feed.style";
 import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
+import { useState } from "react";
 import {
 	FlatList,
+	RefreshControl,
 	ScrollView,
 	Text,
 	TouchableOpacity,
@@ -26,7 +28,13 @@ const STORIES = [
 
 export default function Index() {
 	const { signOut } = useAuth();
+	const [isRefreshing, setIsRefreshing] = useState(false);
 	const posts = useQuery(api.posts.listPost);
+
+	const handleRefresh = () => {
+		setIsRefreshing(true);
+		setTimeout(() => setIsRefreshing(false), 2000);
+	};
 
 	if (posts === undefined) return <Loader />;
 	if (posts.length === 0) return <NoPostsFound />;
@@ -51,6 +59,13 @@ export default function Index() {
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 60 }}
 				ListHeaderComponent={<StorySection />}
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefreshing}
+						onRefresh={handleRefresh}
+						tintColor={COLORS.primary}
+					/>
+				}
 			/>
 		</View>
 	);
