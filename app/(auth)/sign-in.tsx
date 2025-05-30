@@ -32,10 +32,9 @@ export default function SignIn() {
 					<Ionicons name="leaf" size={32} color={COLORS.primary} />
 				</View>
 				<Text style={styles.appName}>Spotlight</Text>
-				<Text style={styles.tagline}>Don't miss anything</Text>
 			</View>
-			{/* ILLUSTRATION */}
-			<View style={styles.illustrationContainer}>
+			{/* ILLUSTRATION SECTION */}
+			<View style={styles.illustrationSection}>
 				<Image
 					source={require("@/assets/images/illustration.png")}
 					style={styles.illustration}
@@ -43,7 +42,7 @@ export default function SignIn() {
 				/>
 			</View>
 			{/* SIGNIN SECTION */}
-			<View style={styles.loginSection}>
+			<View style={styles.signInSection}>
 				<TouchableOpacity
 					style={styles.googleButton}
 					onPress={handleGoogleSignIn}
