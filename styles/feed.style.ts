@@ -1,7 +1,7 @@
 import { COLORS } from "@/constants/theme";
 import { Dimensions, Platform, StyleSheet } from "react-native";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
 	container: {
@@ -18,9 +18,10 @@ export const styles = StyleSheet.create({
 		borderBottomColor: COLORS.surface,
 	},
 	headerTitle: {
+		fontFamily: "Lobster",
 		fontSize: 24,
-		fontFamily: "JetBrainsMono-Medium",
 		color: COLORS.primary,
+		letterSpacing: 1,
 	},
 	storiesContainer: {
 		paddingVertical: 12,
